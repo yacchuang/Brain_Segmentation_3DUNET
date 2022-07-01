@@ -71,7 +71,7 @@ class UNET(nn.Module):
             if x.shape != skip_connection.shape:
                 x = TF.resize(x, size=skip_connection.shape[2:])
             
-            concat_skip = torch.cat((skip_connections, x), dim=1)
+            concat_skip = torch.cat((skip_connection, x), dim=1)
             x = self.ups[idx+1](concat_skip)
             
         return self.final_conv(x)
@@ -86,4 +86,5 @@ def test():
     assert preds.shape == x.shape
     
 if __name__ == "__main__":
+    
     test()
