@@ -23,7 +23,7 @@ from utils import (
 
 # Hyperparameters etc.
 LEARNING_RATE = 1e-4
-DEVICE = "cuba" if torch.cuba.is_available() else "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 16 # CAN INCREASE
 NUM_EPOCHS = 3
 NUM_WORKERS = 2
@@ -46,7 +46,7 @@ def train_fn(loader, model, optimizer, loss_fn, scaler):
         targets = targets.float().unsqueeze(1).to(device=DEVICE)
         
         # forward
-        with torch.cuba.amp.autocast():
+        with torch.cuda.amp.autocast():
             predictions = model(data)
             loss = loss_fn(predictions, targets)
             
@@ -95,7 +95,7 @@ def main():
     
     model = UNET(in_channels=3, out_channels=1).to(DEVICE)  # For multiclass segmentation, out_channels can increase
     loss_fn = nn.BCEWithLogitsLoss() # For multiclass seg: cross entropy loss
-    optimizer = optim.Adam(model.parameter(), lr = LEARNING_RATE)
+    optimizer = optim.Adam(model.parameters(), lr = LEARNING_RATE)
     
     train_loader, val_loader = get_loaders(
         TRAIN_IMAGE_DIR,
@@ -114,7 +114,7 @@ def main():
         load_checkpoint(torch.load("my_checkpoint.pth.tar"), model)
     
     check_accuracy(val_loader, model, device=DEVICE)
-    scaler = torch.cuba.amp.GradScaler()
+    scaler = torch.cuda.amp.GradScaler()
     
     
     for epoch in range(NUM_EPOCHS):
