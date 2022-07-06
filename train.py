@@ -27,15 +27,15 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 16 # CAN INCREASE
 NUM_EPOCHS = 3
 NUM_WORKERS = 2
-IMAGE_HEIGHT = 128 # ORIGINALLY ...
-IMAGE_WIDTH = 128 # ORIGINALLY ...
+IMAGE_HEIGHT = 160 # ORIGINALLY 1280
+IMAGE_WIDTH = 240 # ORIGINALLY 1918
 PIN_MEMORY = True
 LOAD_MODEL = False  # True
 # Images directory
-TRAIN_IMAGE_DIR = "data/train_images/"
-TRAIN_MASK_DIR = "data/train_masks/"
-VAL_IMG_DIR = "data/val_images/"
-VAL_MASK_DIR = "data/val_masks/"
+TRAIN_IMAGE_DIR = "/Users/kurtlab/Documents/GitHub/Brain_Segmentation/data/train_images"
+TRAIN_MASK_DIR = "/Users/kurtlab/Documents/GitHub/Brain_Segmentation/data/train_masks"
+VAL_IMG_DIR = "/Users/kurtlab/Documents/GitHub/Brain_Segmentation/data/val_images"
+VAL_MASK_DIR = "/Users/kurtlab/Documents/GitHub/Brain_Segmentation/data/val_masks"
 
 
 def train_fn(loader, model, optimizer, loss_fn, scaler):

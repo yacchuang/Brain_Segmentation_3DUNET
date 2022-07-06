@@ -66,7 +66,7 @@ def get_loaders(
     return train_loader, val_loader
 
 
-def check_accuracy(loader, model, device="cuba"):
+def check_accuracy(loader, model, device="cuda"):
     num_correct = 0
     num_pixels = 0
     dice_score = 0    # For multiclass seg, probably a better score
@@ -86,7 +86,7 @@ def check_accuracy(loader, model, device="cuba"):
                 
             )
             
-    # print(f"Got {num_correct}/{num_pixels} with acc {num_correct/num_pixels*100:.2f}")
+    print(f"Got {num_correct}/{num_pixels} with acc {num_correct}/{num_pixels*100:.2f}")
     
     # print(f"Dice score: {dice_score/len(loader)}")
     
@@ -95,7 +95,7 @@ def check_accuracy(loader, model, device="cuba"):
     
     
 def save_predictions_as_imgs(
-    loader, model, folder="saved_images/", device="cuba"
+    loader, model, folder="saved_images/", device="cuda"
 ):
     model.eval()
     for idx, (x, y) in enumerate(loader):
@@ -107,5 +107,5 @@ def save_predictions_as_imgs(
             preds, f"{folder}/pred_{idx}.png"
         )
         torchvision.utils.save_image(y.unsqueeze(1), f"{folder}/train_{idx}.png")   # Double check the last line of codes
-    
-        
+
+    model.train()
