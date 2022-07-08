@@ -88,14 +88,14 @@ def check_accuracy(loader, model, device="cuda"):
             
     print(f"Got {num_correct}/{num_pixels} with acc {num_correct}/{num_pixels*100:.2f}")
     
-    # print(f"Dice score: {dice_score/len(loader)}")
+    print(f"Dice score: {dice_score/len(loader)}")
     
     model.train()
     
     
     
 def save_predictions_as_imgs(
-    loader, model, folder="saved_images/", device="cuda"
+    loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_images", device="cuda"
 ):
     model.eval()
     for idx, (x, y) in enumerate(loader):

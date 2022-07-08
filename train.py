@@ -13,6 +13,9 @@ from tqdm import tqdm
 import torch.nn as nn
 import torch.optim as optim
 from UNETmodel import UNET
+
+import matplotlib.pyplot as plt
+plt.switch_backend('TKAgg')
 from utils import (
     load_checkpoint,
     save_checkpoint,
@@ -26,7 +29,7 @@ LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 16 # CAN INCREASE
 NUM_EPOCHS = 3
-NUM_WORKERS = 2
+NUM_WORKERS = 1
 IMAGE_HEIGHT = 160 # ORIGINALLY 1280
 IMAGE_WIDTH = 240 # ORIGINALLY 1918
 PIN_MEMORY = True
@@ -132,7 +135,7 @@ def main():
         
         # print some examples to a folder
         save_predictions_as_imgs(
-            val_loader, model, folder="saved_images/", device=DEVICE
+            val_loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_images", device=DEVICE
         )
     
     
