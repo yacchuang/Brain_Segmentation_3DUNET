@@ -16,7 +16,7 @@ from UNETmodel import UNET
 
 import matplotlib.pyplot as plt
 plt.switch_backend('TKAgg')
-from LoadVisualNIFTI import read_img_sitk, read_img_nii
+
 from utils import (
     load_checkpoint,
     save_checkpoint,
@@ -70,7 +70,7 @@ def train_fn(loader, model, optimizer, loss_fn, scaler):
 def main():
     train_transform = A.Compose(
         [
-            A.Resize(height = IMAGE_HEIGHT, width = IMAGE_WIDTH),
+            # A.Resize(height = IMAGE_HEIGHT, width = IMAGE_WIDTH),
             A.Rotate(limit = 35, p = 1.0),
             A.HorizontalFlip(p = 0.5),
             A.VerticalFlip(p = 1.0),
@@ -86,7 +86,7 @@ def main():
     
     val_transform = A.Compose(
         [
-            A.Resize(height = IMAGE_HEIGHT, width = IMAGE_WIDTH),
+            # A.Resize(height = IMAGE_HEIGHT, width = IMAGE_WIDTH),
             A.Normalize(
                 mean = [0.0, 0.0, 0.0],
                 std = [1.0, 1.0, 1.0],

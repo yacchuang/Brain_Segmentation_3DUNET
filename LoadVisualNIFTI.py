@@ -40,7 +40,7 @@ for mask in PFMaskSubjs:
     # print("Shape of sitk_PFMaskImg : ", sitk_shape)
 
 
-
+'''
 ## Visualize samples
 BrainT1Subj02 = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/BrainMRI_train/T1_LPI_Subj02.nii";
 PFMaskSubj02 = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/PFMask_train/PFseg_LPI_Subj02.nii";
@@ -71,4 +71,4 @@ def explore_3dimage(layer = (0,255) , modality=['BrainT1Subj02', 'PFMaskSubj02']
     plt.imshow(array_view, cmap='gray')
     plt.title('Explore Layers of Brain', fontsize=10)
     plt.axis('off')
-
+'''

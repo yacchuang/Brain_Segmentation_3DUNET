@@ -15,8 +15,8 @@ import numpy as np
 
 class BrainDataset(Dataset):
     def __init__(self, image_dir, mask_dir, transform=None):
-        read_img_sitk(Dataset)
-        read_img_nii(Dataset)
+        read_img_sitk(self)
+        read_img_nii(self)
         self.image_dir = image_dir
         self.mask_dir = mask_dir
         self.transform = transform
