@@ -30,15 +30,15 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 16 # CAN INCREASE
 NUM_EPOCHS = 3
 NUM_WORKERS = 1
-IMAGE_HEIGHT = 160 # ORIGINALLY 1280
-IMAGE_WIDTH = 240 # ORIGINALLY 1918
+IMAGE_HEIGHT = 256 # ORIGINALLY 1280
+IMAGE_WIDTH = 256 # ORIGINALLY 1918
 PIN_MEMORY = True
 LOAD_MODEL = False  # True
 # Images directory
-TRAIN_IMAGE_DIR = "/Users/kurtlab/Documents/GitHub/Brain_Segmentation/data/train_images"
-TRAIN_MASK_DIR = "/Users/kurtlab/Documents/GitHub/Brain_Segmentation/data/train_masks"
-VAL_IMG_DIR = "/Users/kurtlab/Documents/GitHub/Brain_Segmentation/data/val_images"
-VAL_MASK_DIR = "/Users/kurtlab/Documents/GitHub/Brain_Segmentation/data/val_masks"
+TRAIN_IMAGE_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/BrainMRI_train"
+TRAIN_MASK_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/PFMask_train"
+VAL_IMG_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/BrainMRI_val"
+VAL_MASK_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/PFMask_val"
 
 
 def train_fn(loader, model, optimizer, loss_fn, scaler):
@@ -135,7 +135,7 @@ def main():
         
         # print some examples to a folder
         save_predictions_as_imgs(
-            val_loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_images", device=DEVICE
+            val_loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_BrainSegImages", device=DEVICE
         )
     
     

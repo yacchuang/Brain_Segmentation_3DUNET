@@ -95,7 +95,7 @@ def check_accuracy(loader, model, device="cuda"):
     
     
 def save_predictions_as_imgs(
-    loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_images", device="cuda"
+    loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_BrainSegImages", device="cuda"
 ):
     model.eval()
     for idx, (x, y) in enumerate(loader):
