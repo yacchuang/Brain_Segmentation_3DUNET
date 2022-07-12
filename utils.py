@@ -8,7 +8,7 @@ Created on Sun Jul  3 10:08:04 2022
 
 import torch
 import torchvision
-from dataset import CarvanaDataset
+from BrainDataset import BrainDataset
 from torch.utils.data import DataLoader
 
 def save_checkpoint(state, filename = "my_checkpoint.pth.tar"):
@@ -31,7 +31,7 @@ def get_loaders(
     pin_memory=True,
         
 ):
-    train_ds = CarvanaDataset(
+    train_ds = BrainDataset(
         image_dir=train_dir,
         mask_dir=train_maskdir,
         transform=train_transform,
@@ -47,7 +47,7 @@ def get_loaders(
     )
     
     
-    val_ds = CarvanaDataset(
+    val_ds = BrainDataset(
         image_dir=val_dir,
         mask_dir=val_maskdir,
         transform=val_transform,

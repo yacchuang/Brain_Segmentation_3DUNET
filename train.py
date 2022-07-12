@@ -16,6 +16,7 @@ from UNETmodel import UNET
 
 import matplotlib.pyplot as plt
 plt.switch_backend('TKAgg')
+from LoadVisualNIFTI import read_img_sitk, read_img_nii
 from utils import (
     load_checkpoint,
     save_checkpoint,
