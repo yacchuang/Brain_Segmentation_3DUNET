@@ -13,7 +13,7 @@ from volumentations import *
 from tqdm import tqdm
 import torch.nn as nn
 import torch.optim as optim
-from UNETmodel import UNET
+from UNETmodel3D import UNET
 
 import matplotlib.pyplot as plt
 plt.switch_backend('TKAgg')
@@ -31,7 +31,7 @@ LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 16 # CAN INCREASE
 NUM_EPOCHS = 3
-NUM_WORKERS = 2
+NUM_WORKERS = 0
 IMAGE_HEIGHT = 256 # ORIGINALLY 1280
 IMAGE_WIDTH = 256 # ORIGINALLY 1918
 PIN_MEMORY = True
