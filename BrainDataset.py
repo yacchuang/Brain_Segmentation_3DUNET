@@ -12,7 +12,33 @@ from torch.utils.data import Dataset
 import SimpleITK as sitk
 import nibabel as nib
 from LoadVisualNIFTI import read_img_nii, read_img_sitk, np_BrainImg, np_PFMaskImg
+from volumentations import *
 import numpy as np
+
+patch_size = (256, 256, 256)
+
+
+def get_augmentation():
+    return Compose([
+        RemoveEmptyBorder(always_apply=True),
+        RandomScale((0.8, 1.2)),
+        PadIfNeeded(patch_size, always_apply=True),
+        # RandomCrop(patch_size, always_apply=True),
+        # CenterCrop(patch_size, always_apply=True),
+        # RandomCrop(patch_size, always_apply=True),
+        # Resize(patch_size, always_apply=True),
+        CropNonEmptyMaskIfExists(patch_size, always_apply=True),
+        Normalize(always_apply=True),
+        # ElasticTransform((0, 0.25)),
+        # Rotate((-15,15),(-15,15),(-15,15)),
+        # Flip(0),
+        # Flip(1),
+        # Flip(2),
+        # Transpose((1,0,2)), # only if patch.height = patch.width
+        # RandomRotate90((0,1)),
+        # RandomGamma(),
+        # GaussianNoise(),
+    ], p=1)
 
 
 class BrainDataset(Dataset):
@@ -44,9 +70,16 @@ class BrainDataset(Dataset):
         # mask = np.array(Image.open(mask_path).convert("L"), dtype=np.float32)
         mask[mask == 255.0] = 1.0
 
+        data = {
+            'image': image,
+            'mask': mask,
+        }
+
+
         if self.transform is not None:
-            augmentations = self.transform(image=image, mask=mask)
-            image = augmentations["image"]
-            mask = augmentations["mask"]
+            aug = get_augmentation()
+            image = aug["image"]
+            mask = aug["mask"]
+
 
         return image, mask

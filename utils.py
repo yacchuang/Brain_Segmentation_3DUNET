@@ -25,8 +25,9 @@ def get_loaders(
     val_dir,
     val_maskdir,
     batch_size,
-    train_transform,
-    val_transform,
+    aug,
+    # train_transform,
+    # val_transform,
     num_workers=4,
     pin_memory=True,
         
@@ -34,7 +35,8 @@ def get_loaders(
     train_ds = BrainDataset(
         image_dir=train_dir,
         mask_dir=train_maskdir,
-        transform=train_transform,
+        transform=aug,
+        # transform=train_transform,
     )
     
     
@@ -50,7 +52,8 @@ def get_loaders(
     val_ds = BrainDataset(
         image_dir=val_dir,
         mask_dir=val_maskdir,
-        transform=val_transform,
+        transform=aug,
+        # transform=val_transform,
     )
         
     

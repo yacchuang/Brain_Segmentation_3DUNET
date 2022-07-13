@@ -9,6 +9,7 @@ Created on Fri Jul  1 16:42:53 2022
 import torch
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
+from volumentations import *
 from tqdm import tqdm
 import torch.nn as nn
 import torch.optim as optim
@@ -16,7 +17,7 @@ from UNETmodel import UNET
 
 import matplotlib.pyplot as plt
 plt.switch_backend('TKAgg')
-
+from BrainDataset import get_augmentation
 from utils import (
     load_checkpoint,
     save_checkpoint,
@@ -30,7 +31,7 @@ LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 16 # CAN INCREASE
 NUM_EPOCHS = 3
-NUM_WORKERS = 1
+NUM_WORKERS = 2
 IMAGE_HEIGHT = 256 # ORIGINALLY 1280
 IMAGE_WIDTH = 256 # ORIGINALLY 1918
 PIN_MEMORY = True
@@ -68,6 +69,8 @@ def train_fn(loader, model, optimizer, loss_fn, scaler):
         
 
 def main():
+    aug = get_augmentation()
+    '''
     train_transform = A.Compose(
         [
             A.Resize(height = IMAGE_HEIGHT, width = IMAGE_WIDTH),
@@ -95,7 +98,7 @@ def main():
             ToTensorV2(),
         ],
     )
-    
+    '''
     
     model = UNET(in_channels=3, out_channels=1).to(DEVICE)  # For multiclass segmentation, out_channels can increase
     loss_fn = nn.BCEWithLogitsLoss() # For multiclass seg: cross entropy loss
@@ -107,8 +110,9 @@ def main():
         VAL_IMG_DIR,
         VAL_MASK_DIR,
         BATCH_SIZE,
-        train_transform,
-        val_transform,
+        aug,
+        # train_transform,
+        # val_transform,
         NUM_WORKERS,
         PIN_MEMORY,
         
