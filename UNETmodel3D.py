@@ -15,10 +15,10 @@ class DoubleConv(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(DoubleConv, self).__init__()
         self.conv = nn.Sequential(
-            nn.Conv3d(in_channels, out_channels, 3,1,1, bias=False),  # 1st Conv
+            nn.Conv3d(in_channels, out_channels, kernel_size=3, padding=1, bias=True),  # 1st Conv
             nn.BatchNorm3d(out_channels),
             nn.ReLU(inplace=True),
-            nn.Conv3d(out_channels, out_channels, 3,1,1, bias=False),  # 2nd Conv
+            nn.Conv3d(out_channels, out_channels, kernel_size=3, padding=1, bias=True),  # 2nd Conv
             nn.BatchNorm3d(out_channels),
             nn.ReLU(inplace=True),
             )
@@ -28,12 +28,12 @@ class DoubleConv(nn.Module):
     
 class UNET(nn.Module):
     def __init__(
-            self, in_channels=3, out_channels=3, features=[64, 128, 256],
+            self, in_channels=1, out_channels=1, features=[64, 128, 256],
     ):
         super(UNET, self).__init__()
         self.ups = nn.ModuleList()
         self.downs = nn.ModuleList()
-        self.pool = nn.MaxPool3d(kernel_size=3, stride=3)
+        self.pool = nn.MaxPool3d(kernel_size=2, stride=2)
         
         
         # Down part of UNET
@@ -46,13 +46,13 @@ class UNET(nn.Module):
         for feature in reversed(features):
             self.ups.append(
                 nn.ConvTranspose3d(
-                    feature*2, feature, kernel_size=3, stride=3,
+                    feature*2, feature, kernel_size=2, stride=2,
                 )
             )
             self.ups.append(DoubleConv(feature*2, feature))
             
         self.bottleneck = DoubleConv(features[-1], features[-1]*2)
-        self.final_conv = nn.Conv3d(features[0], out_channels, kernel_size=2)
+        self.final_conv = nn.Conv3d(features[0], out_channels, kernel_size=1)
         
     def forward(self, x):
         skip_connections =[]
@@ -77,10 +77,10 @@ class UNET(nn.Module):
             
         return self.final_conv(x)
             
-'''
+
 def test():
-    x = torch.randn((3, 1, 64, 64, 64))
-    model = UNET(in_channels=1, out_channels=1)
+    x = torch.randn((3, 3, 64, 64, 64))
+    model = UNET(in_channels=3, out_channels=3)
     preds = model(x)
     print(preds.shape)
     print(x.shape)
@@ -88,4 +88,4 @@ def test():
 
 if __name__ == "__main__":
     test()
-'''
+
