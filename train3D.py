@@ -29,7 +29,7 @@ from utils import (
 # Hyperparameters etc.
 LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-BATCH_SIZE = 16 # CAN INCREASE
+BATCH_SIZE = 1 # CAN INCREASE
 NUM_EPOCHS = 3
 NUM_WORKERS = 0
 IMAGE_HEIGHT = 256 # ORIGINALLY 1280
@@ -47,7 +47,7 @@ def train_fn(loader, model, optimizer, loss_fn, scaler):
     loop = tqdm(loader)
     
     for batch_idx, (data, targets) in enumerate(loop):
-        data = data.to(device=DEVICE)
+        data = data.float().unsqueeze(1).to(device=DEVICE)
         targets = targets.float().unsqueeze(1).to(device=DEVICE)
         
         # forward
@@ -100,7 +100,7 @@ def main():
     )
     '''
     
-    model = UNET(in_channels=3, out_channels=1).to(DEVICE)  # For multiclass segmentation, out_channels can increase
+    model = UNET(in_channels=1, out_channels=1).to(DEVICE)  # For multiclass segmentation, out_channels can increase
     loss_fn = nn.BCEWithLogitsLoss() # For multiclass seg: cross entropy loss
     optimizer = optim.Adam(model.parameters(), lr = LEARNING_RATE)
     
@@ -120,8 +120,8 @@ def main():
     
     if LOAD_MODEL:
         load_checkpoint(torch.load("my_checkpoint.pth.tar"), model)
-    
-    check_accuracy(val_loader, model, device=DEVICE)
+        check_accuracy(val_loader, model, device=DEVICE)
+
     scaler = torch.cuda.amp.GradScaler()
     
     
