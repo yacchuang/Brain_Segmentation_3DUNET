@@ -30,7 +30,7 @@ from utils import (
 LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 1 # CAN INCREASE
-NUM_EPOCHS = 3
+NUM_EPOCHS = 2
 NUM_WORKERS = 0
 IMAGE_HEIGHT = 256 # ORIGINALLY 1280
 IMAGE_WIDTH = 256 # ORIGINALLY 1918
@@ -69,7 +69,7 @@ def train_fn(loader, model, optimizer, loss_fn, scaler):
         
 
 def main():
-    aug = get_augmentation()
+    aug = get_augmentation((32, 32, 32))
     '''
     train_transform = A.Compose(
         [
@@ -139,9 +139,9 @@ def main():
         check_accuracy(val_loader, model, device=DEVICE)
         
         # print some examples to a folder
-        save_predictions_as_imgs(
-            val_loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_BrainSegImages", device=DEVICE
-        )
+        # save_predictions_as_imgs(
+        #     val_loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_BrainSegImages", device=DEVICE
+        # )
     
     
     

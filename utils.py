@@ -78,8 +78,8 @@ def check_accuracy(loader, model, device="cuda"):
     
     with torch.no_grad():
         for x, y in loader:
-            x = x.to(device)
-            y = y.to(device).unsqueeze(1)  # label doesn't have color
+            x = x.float().unsqueeze(1).to(device)
+            y = y.float().unsqueeze(1).to(device)  # label doesn't have color
             preds = torch.sigmoid(model(x))
             preds = (preds > 0.5).float()
             num_correct += (preds == y).sum()
@@ -102,13 +102,13 @@ def save_predictions_as_imgs(
 ):
     model.eval()
     for idx, (x, y) in enumerate(loader):
-        x = x.to(device=device)
+        x = x.float().unsqueeze(1).to(device=device)
         with torch.no_grad():
             preds = torch.sigmoid(model(x))
             preds = (preds > 0.5).float()
         torchvision.utils.save_image(
             preds, f"{folder}/pred_{idx}.png"
         )
-        torchvision.utils.save_image(y.unsqueeze(1), f"{folder}/train_{idx}.png")   # Double check the last line of codes
+        torchvision.utils.save_image(y.float().unsqueeze(1), f"{folder}/train_{idx}.png")
 
     model.train()

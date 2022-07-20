@@ -15,10 +15,10 @@ from LoadVisualNIFTI import read_img_nii, read_img_sitk, np_BrainImg, np_PFMaskI
 from volumentations import *
 import numpy as np
 
-patch_size = (256, 256, 256)
+patch_size = (32, 32, 32)
 
 
-def get_augmentation():
+def get_augmentation(patch_size):
     return Compose([
         RemoveEmptyBorder(always_apply=True),
         RandomScale((0.8, 1.2)),
@@ -73,13 +73,12 @@ class BrainDataset(Dataset):
 
 
         if self.transform is not None:
-            aug = get_augmentation()
-            # image = aug["image"]
-            # mask = aug["mask"]
-            data = {
-                'image': image,
-                'mask': mask,
-            }
+            aug = get_augmentation(patch_size)
+
+            # with mask
+            data = {'image': image, 'mask': mask}
+            aug_data = aug(**data)
+            image, mask = aug_data['image'], aug_data['mask']
 
 
         return image, mask
