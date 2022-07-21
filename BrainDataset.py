@@ -13,9 +13,10 @@ import SimpleITK as sitk
 import nibabel as nib
 from LoadVisualNIFTI import read_img_nii, read_img_sitk, np_BrainImg, np_PFMaskImg
 from volumentations import *
+from patchify import patchify, unpatchify
 import numpy as np
 
-patch_size = (32, 32, 32)
+patch_size = (256, 256, 256)   # Whole MRI image
 
 
 def get_augmentation(patch_size):
@@ -65,6 +66,10 @@ class BrainDataset(Dataset):
         image = sitk.GetArrayFromImage(BrainT1)
         mask = sitk.GetArrayFromImage(PFMask)
 
+        # # Patchify 3D data
+        # patche_image = patchify(image, (32, 32, 32), step=1)
+        # patche_mask = patchify(mask, (32, 32, 32), step=1)
+
 
         # image = np.array(Image.open(img_path).convert("RGB"))
         # mask = np.array(Image.open(mask_path).convert("L"), dtype=np.float32)
@@ -79,6 +84,9 @@ class BrainDataset(Dataset):
             data = {'image': image, 'mask': mask}
             aug_data = aug(**data)
             image, mask = aug_data['image'], aug_data['mask']
+
+        # image = unpatchify(patche_image, image.shape)
+        # mask = unpatchify(patche_mask, image.shape)
 
 
         return image, mask

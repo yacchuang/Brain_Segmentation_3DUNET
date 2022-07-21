@@ -10,6 +10,8 @@ import torch
 import torchvision
 from BrainDataset import BrainDataset
 from torch.utils.data import DataLoader
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 def save_checkpoint(state, filename = "my_checkpoint.pth.tar"):
     print("=> Saving checkpoint")
@@ -88,7 +90,14 @@ def check_accuracy(loader, model, device="cuda"):
                 (preds + y).sum() + 1e-8
                 
             )
-            
+            # Plot and compare train and prediction images in 2D
+            testing_output_label = model(preds.to(device))
+            testing_output_label = testing_output_label.cpu().detach().numpy()
+            plt.figure()
+            plt.imshow(x[0, 0, :, :, 16], cmap='gray')
+            plt.imshow(testing_output_label[0, 0, :, :, 16], cmap='gray', alpha=0.7)
+            plt.show()
+
     print(f"Got {num_correct}/{num_pixels} with acc {num_correct}/{num_pixels*100:.2f}")
     
     print(f"Dice score: {dice_score/len(loader)}")

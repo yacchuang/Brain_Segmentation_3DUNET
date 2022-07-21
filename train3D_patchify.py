@@ -34,7 +34,7 @@ NUM_EPOCHS = 2
 NUM_WORKERS = 0
 IMAGE_HEIGHT = 128
 IMAGE_WIDTH = 128
-patch_size = (256, 256, 256)   # Whole MRI image
+patch_size = (64, 64, 64)
 PIN_MEMORY = True
 LOAD_MODEL = False  # True
 
