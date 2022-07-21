@@ -7,8 +7,6 @@ Created on Fri Jul  1 16:42:53 2022
 """
 
 import torch
-import albumentations as A
-from albumentations.pytorch import ToTensorV2
 from volumentations import *
 from tqdm import tqdm
 import torch.nn as nn
@@ -32,9 +30,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 1 # CAN INCREASE
 NUM_EPOCHS = 2
 NUM_WORKERS = 0
-IMAGE_HEIGHT = 128
-IMAGE_WIDTH = 128
-patch_size = (256, 256, 256)   # Whole MRI image
+patch_size = (128, 128, 128)   # Whole MRI image
 PIN_MEMORY = True
 LOAD_MODEL = False  # True
 

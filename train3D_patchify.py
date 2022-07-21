@@ -7,8 +7,6 @@ Created on Fri Jul  1 16:42:53 2022
 """
 
 import torch
-import albumentations as A
-from albumentations.pytorch import ToTensorV2
 from volumentations import *
 from tqdm import tqdm
 import torch.nn as nn
@@ -17,7 +15,8 @@ from UNETmodel3D import UNET
 
 import matplotlib.pyplot as plt
 plt.switch_backend('TKAgg')
-from BrainDataset import get_augmentation, patch_size
+from BrainDataset_patchify import get_augmentation
+from patchify import patchify, unpatchify
 from utils import (
     load_checkpoint,
     save_checkpoint,
@@ -32,9 +31,8 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 1 # CAN INCREASE
 NUM_EPOCHS = 2
 NUM_WORKERS = 0
-IMAGE_HEIGHT = 128
-IMAGE_WIDTH = 128
 patch_size = (64, 64, 64)
+n_classes = 4
 PIN_MEMORY = True
 LOAD_MODEL = False  # True
 
@@ -51,7 +49,16 @@ def train_fn(loader, model, optimizer, loss_fn, scaler):
     
     for batch_idx, (data, targets) in enumerate(loop):
         data = data.float().unsqueeze(1).to(device=DEVICE)
+        # data = patchify(data, (64, 64, 64), step=64)
         targets = targets.float().unsqueeze(1).to(device=DEVICE)
+        # targets = patchify(targets, (64, 64, 64), step=64)
+
+        # plt.imshow(data[1,2,3,:,:,32])
+
+        # input_img = np.reshape(data, (-1, data.shape[3], data.shape[4], data.shape[5]))
+        # input_mask = np.reshape(targets, (-1, targets.shape[3], targets.shape[4], targets.shape[5]))
+
+        # print(input_img.shape)
         
         # forward
         with torch.cuda.amp.autocast():
@@ -114,15 +121,13 @@ def main():
         VAL_MASK_DIR,
         BATCH_SIZE,
         aug,
-        # train_transform,
-        # val_transform,
         NUM_WORKERS,
         PIN_MEMORY,
         
     )
     
     if LOAD_MODEL:
-        load_checkpoint(torch.load("my_checkpoint.pth.tar"), model)
+        load_checkpoint(torch.load("PFseg_checkpoint.pth.tar"), model)
         check_accuracy(val_loader, model, device=DEVICE)
 
     scaler = torch.cuda.amp.GradScaler()
