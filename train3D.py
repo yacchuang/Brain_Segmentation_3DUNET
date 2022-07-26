@@ -28,7 +28,7 @@ from utils import (
 LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 1 # CAN INCREASE
-NUM_EPOCHS = 2
+NUM_EPOCHS = 10
 NUM_WORKERS = 0
 patch_size = (128, 128, 128)   # Whole MRI image
 PIN_MEMORY = True
@@ -118,7 +118,7 @@ def main():
     )
     
     if LOAD_MODEL:
-        load_checkpoint(torch.load("my_checkpoint.pth.tar"), model)
+        load_checkpoint(torch.load("my_checkpoint_EPO10.pth.tar"), model)
         check_accuracy(val_loader, model, device=DEVICE)
 
     scaler = torch.cuda.amp.GradScaler()
@@ -150,9 +150,9 @@ def main():
     #     plt.show()
         
         # print some examples to a folder
-        # save_predictions_as_imgs(
-        #     val_loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_BrainSegImages", device=DEVICE
-        # )
+        save_predictions_as_imgs(
+            val_loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_BrainSegImages", device=DEVICE
+        )
     
     
     
