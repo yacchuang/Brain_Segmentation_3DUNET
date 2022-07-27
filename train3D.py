@@ -28,7 +28,7 @@ from utils import (
 LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 1 # CAN INCREASE
-NUM_EPOCHS = 10
+NUM_EPOCHS = 5
 NUM_WORKERS = 0
 patch_size = (128, 128, 128)   # Whole MRI image
 PIN_MEMORY = True
@@ -36,10 +36,10 @@ LOAD_MODEL = False  # True
 
 
 # Images directory
-TRAIN_IMAGE_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/BrainMRI_train"
-TRAIN_MASK_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/PFMask_train"
-VAL_IMG_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/BrainMRI_val"
-VAL_MASK_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/PFMask_val"
+TRAIN_IMAGE_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/BrainMRI"
+TRAIN_MASK_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/PFMask"
+VAL_IMG_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/BrainMRI"
+VAL_MASK_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/PFMask"
 
 
 def train_fn(loader, model, optimizer, loss_fn, scaler):
@@ -48,6 +48,7 @@ def train_fn(loader, model, optimizer, loss_fn, scaler):
     for batch_idx, (data, targets) in enumerate(loop):
         data = data.float().unsqueeze(1).to(device=DEVICE)
         targets = targets.float().unsqueeze(1).to(device=DEVICE)
+        # plot data and targets
         
         # forward
         with torch.cuda.amp.autocast():
@@ -118,7 +119,7 @@ def main():
     )
     
     if LOAD_MODEL:
-        load_checkpoint(torch.load("my_checkpoint_EPO10.pth.tar"), model)
+        load_checkpoint(torch.load("PFcheckpoint_EPO5.pth.tar"), model)
         check_accuracy(val_loader, model, device=DEVICE)
 
     scaler = torch.cuda.amp.GradScaler()
@@ -136,23 +137,22 @@ def main():
         
         # check accuracy and plot prediction images
         check_accuracy(val_loader, model, device=DEVICE)
-
-
-    # # Plot and compare images with predictions
-    # for x, y in train_loader:
-    #     x = x.float().unsqueeze(1).to(device=DEVICE)
-    #     preds = torch.sigmoid(model(x))
-    #     testing_output_label = model(preds.to(device=DEVICE))
-    #     testing_output_label = testing_output_label.cpu().detach().numpy()
-    #     plt.figure()
-    #     plt.imshow(x[0, 0, :, :, 16], cmap='gray')
-    #     plt.imshow(testing_output_label[0, 0, :, :, 16], cmap='gray', alpha=0.7)
-    #     plt.show()
         
         # print some examples to a folder
         save_predictions_as_imgs(
             val_loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_BrainSegImages", device=DEVICE
         )
+
+        # # Plot and compare images with predictions
+        # for x, y in train_loader:
+        #     x = x.float().unsqueeze(1).to(device=DEVICE)
+        #     preds = torch.sigmoid(model(x))
+        #     testing_output_label = model(preds.to(device=DEVICE))
+        #     testing_output_label = testing_output_label.cpu().detach().numpy()
+        #     plt.figure()
+        #     plt.imshow(x[0, 0, :, :, 16], cmap='gray')
+        #     plt.imshow(testing_output_label[0, 0, :, :, 16], cmap='gray', alpha=0.7)
+        #     plt.show()
     
     
     

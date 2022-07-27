@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def save_checkpoint(state, filename = "my_checkpoint_EPO10.pth.tar"):
+def save_checkpoint(state, filename = "PFcheckpoint_EPO5.pth.tar"):
     print("=> Saving checkpoint")
     torch.save(state, filename)
     
@@ -90,12 +90,11 @@ def check_accuracy(loader, model, device="cuda"):
                 (preds + y).sum() + 1e-8
                 
             )
-            # Plot and compare train and prediction images in 2D
-            # testing_output_label = model(preds.to(device))
-            # testing_output_label = testing_output_label.cpu().detach().numpy()
+            # # Plot and compare train and prediction images in 2D
             # plt.figure()
-            # plt.imshow(x[0, 0, :, :, 64], cmap='gray')
-            # plt.imshow(preds[0, 0, :, :, 64], cmap='gray', alpha=0.7)
+            # plt.imshow(x[0, 0, 64, :, :], cmap='gray')
+            # plt.figure()
+            # plt.imshow(preds[0, 0, 64, :, :], cmap='gray', alpha=0.7)
             # plt.show()
 
     print(f"Got {num_correct}/{num_pixels} with acc {num_correct}/{num_pixels*100:.2f}")
@@ -115,9 +114,7 @@ def save_predictions_as_imgs(
         with torch.no_grad():
             preds = torch.sigmoid(model(x))
             preds = (preds > 0.5).float()
-        torchvision.utils.save_image(
-            preds[0, 0, :, :, 64], f"{folder}/pred_{idx}.png"
-        )
-        torchvision.utils.save_image(y.float().unsqueeze(1)[0, 0, :, :, 64], f"{folder}/train_{idx}.png")
+        torchvision.utils.save_image(preds[0, 0, 64, :, :], f"{folder}/pred_{idx}.png")
+        torchvision.utils.save_image(y.float().unsqueeze(1)[0, 0, 64, :, :], f"{folder}/train_{idx}.png")
 
     model.train()
