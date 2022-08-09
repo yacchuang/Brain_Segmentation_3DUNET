@@ -28,18 +28,18 @@ from utils import (
 LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 1 # CAN INCREASE
-NUM_EPOCHS = 5
+NUM_EPOCHS = 3
 NUM_WORKERS = 0
 patch_size = (128, 128, 128)   # Whole MRI image
 PIN_MEMORY = True
-LOAD_MODEL = False  # True
+LOAD_MODEL = True  # True
 
 
 # Images directory
-TRAIN_IMAGE_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/BrainMRI"
-TRAIN_MASK_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/PFMask"
-VAL_IMG_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/BrainMRI"
-VAL_MASK_DIR = "/Volumes/Kurtlab/Chiari_Morpho_Segmentation/Segmentation/BrainSeg/PFMask"
+TRAIN_IMAGE_DIR = "/Users/kurtlab/Desktop/Brain_segmentation/BrainSeg/BrainMRI_train"
+TRAIN_MASK_DIR = "/Users/kurtlab/Desktop/Brain_segmentation/BrainSeg/PFMask_train"
+VAL_IMG_DIR = "/Users/kurtlab/Desktop/Brain_segmentation/BrainSeg/BrainMRI_val"
+VAL_MASK_DIR = "/Users/kurtlab/Desktop/Brain_segmentation/BrainSeg/PFMask_val"
 
 
 def train_fn(loader, model, optimizer, loss_fn, scaler):
@@ -123,7 +123,7 @@ def main():
         check_accuracy(val_loader, model, device=DEVICE)
 
     scaler = torch.cuda.amp.GradScaler()
-    
+
     
     for epoch in range(NUM_EPOCHS):
         train_fn(train_loader, model, optimizer, loss_fn, scaler)
