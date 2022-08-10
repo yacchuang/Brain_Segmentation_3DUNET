@@ -10,6 +10,7 @@ import torch
 import torchvision
 from BrainDataset import BrainDataset
 from torch.utils.data import DataLoader
+import nibabel as nib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -105,7 +106,7 @@ def check_accuracy(loader, model, device="cuda"):
     
     
     
-def save_predictions_as_imgs(
+def save_predictions(
     loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_BrainSegImages", device="cuda"
 ):
     model.eval()
@@ -116,5 +117,10 @@ def save_predictions_as_imgs(
             preds = (preds > 0.5).float()
         torchvision.utils.save_image(preds[0, 0, 64, :, :], f"{folder}/pred_{idx}.png")
         torchvision.utils.save_image(y.float().unsqueeze(1)[0, 0, 64, :, :], f"{folder}/train_{idx}.png")
+        # Convert numpy array to NIFTI
+        nifti = nib.Nifti1Image(preds, None)
+        # nifti.get_data_dtype() = seg.dtype
+        # Save segmentation to disk
+        nib.save(nifti, f"{folder}/prediction_{idx}.nii.gz")
 
     model.train()

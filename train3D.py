@@ -21,14 +21,14 @@ from utils import (
     save_checkpoint,
     get_loaders,
     check_accuracy,
-    save_predictions_as_imgs,
+    save_predictions,
 ) 
 
 # Hyperparameters etc.
 LEARNING_RATE = 1e-4
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 1 # CAN INCREASE
-NUM_EPOCHS = 3
+NUM_EPOCHS = 5
 NUM_WORKERS = 0
 patch_size = (128, 128, 128)   # Whole MRI image
 PIN_MEMORY = True
@@ -139,9 +139,11 @@ def main():
         check_accuracy(val_loader, model, device=DEVICE)
         
         # print some examples to a folder
-        save_predictions_as_imgs(
+        save_predictions(
             val_loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_BrainSegImages", device=DEVICE
         )
+
+        # save_segmentation from DataLoaderNIFTI
 
         # # Plot and compare images with predictions
         # for x, y in train_loader:

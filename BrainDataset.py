@@ -11,7 +11,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 import SimpleITK as sitk
 import nibabel as nib
-from LoadVisualNIFTI import read_img_nii, read_img_sitk, np_BrainImg, np_PFMaskImg
+from LoadVisualNIFTI import read_img_nii, read_img_sitk
 from volumentations import *
 import numpy as np
 
