@@ -118,9 +118,8 @@ def save_predictions(
         torchvision.utils.save_image(preds[0, 0, 64, :, :], f"{folder}/pred_{idx}.png")
         torchvision.utils.save_image(y.float().unsqueeze(1)[0, 0, 64, :, :], f"{folder}/train_{idx}.png")
         # Convert numpy array to NIFTI
-        nifti = nib.Nifti1Image(preds, None)
-        # nifti.get_data_dtype() = seg.dtype
-        # Save segmentation to disk
-        nib.save(nifti, f"{folder}/prediction_{idx}.nii.gz")
+        image_data = sitk.GetImageFromArray(preds, sitk.sitkFloat32)
+        sitk.WriteImage(image_data, f"{folder}/prediction_{idx}.nii.gz")
+
 
     model.train()
