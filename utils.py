@@ -14,7 +14,7 @@ import nibabel as nib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def save_checkpoint(state, filename = "PFcheckpoint_EPO5.pth.tar"):
+def save_checkpoint(state, filename = "PFcheckpoint_EP10.pth.tar"):
     print("=> Saving checkpoint")
     torch.save(state, filename)
     
