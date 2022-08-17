@@ -23,6 +23,7 @@ from utils import (
     check_accuracy,
     save_predictions,
 ) 
+import SimpleITK as sitk
 
 # Hyperparameters etc.
 LEARNING_RATE = 1e-4

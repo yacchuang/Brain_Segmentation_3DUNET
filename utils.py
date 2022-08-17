@@ -10,6 +10,7 @@ import torch
 import torchvision
 from BrainDataset import BrainDataset
 from torch.utils.data import DataLoader
+import SimpleITK as sitk
 import nibabel as nib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -118,6 +119,7 @@ def save_predictions(
         torchvision.utils.save_image(preds[0, 0, 64, :, :], f"{folder}/pred_{idx}.png")
         torchvision.utils.save_image(y.float().unsqueeze(1)[0, 0, 64, :, :], f"{folder}/train_{idx}.png")
         # Convert numpy array to NIFTI
+        preds = x.float().squeeze(1).to(device=device)
         image_data = sitk.GetImageFromArray(preds, sitk.sitkFloat32)
         sitk.WriteImage(image_data, f"{folder}/prediction_{idx}.nii.gz")
 
