@@ -120,7 +120,7 @@ def main():
     )
     
     if LOAD_MODEL:
-        load_checkpoint(torch.load("PFcheckpoint_EP10.pth.tar"), model)
+        load_checkpoint(torch.load("PFcheckpoint_test.pth.tar"), model)
         check_accuracy(val_loader, model, device=DEVICE)
 
     scaler = torch.cuda.amp.GradScaler()
@@ -144,21 +144,6 @@ def main():
             val_loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_BrainSegImages", device=DEVICE
         )
 
-        # save_segmentation from DataLoaderNIFTI
 
-        # # Plot and compare images with predictions
-        # for x, y in train_loader:
-        #     x = x.float().unsqueeze(1).to(device=DEVICE)
-        #     preds = torch.sigmoid(model(x))
-        #     testing_output_label = model(preds.to(device=DEVICE))
-        #     testing_output_label = testing_output_label.cpu().detach().numpy()
-        #     plt.figure()
-        #     plt.imshow(x[0, 0, :, :, 16], cmap='gray')
-        #     plt.imshow(testing_output_label[0, 0, :, :, 16], cmap='gray', alpha=0.7)
-        #     plt.show()
-    
-    
-    
-    
 if __name__ == "__main__":
     main()

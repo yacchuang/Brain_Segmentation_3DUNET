@@ -35,7 +35,7 @@ def get_augmentation(patch_size):
         # Flip(1),
         # Flip(2),
         # Transpose((1,0,2)), # only if patch.height = patch.width
-        # RandomRotate90((0,1)),
+        RandomRotate90((0,1)),
         # RandomGamma(),
         # GaussianNoise(),
     ], p=1)

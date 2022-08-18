@@ -15,7 +15,7 @@ import nibabel as nib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def save_checkpoint(state, filename = "PFcheckpoint_EP10.pth.tar"):
+def save_checkpoint(state, filename = "PFcheckpoint_test.pth.tar"):
     print("=> Saving checkpoint")
     torch.save(state, filename)
     
@@ -73,6 +73,30 @@ def get_loaders(
     return train_loader, val_loader
 
 
+def get_testset(
+        test_dir,
+        batch_size,
+        aug,
+        num_workers=4,
+        pin_memory=True,
+
+):
+    test_ds = BrainDataset(
+        image_dir=test_dir,
+        mask_dir=None,
+        transform=aug,
+    )
+
+    test_loader = DataLoader(
+        test_ds,
+        batch_size=batch_size,
+        num_workers=num_workers,
+        pin_memory=pin_memory,
+        shuffle=True,
+    )
+
+    return test_loader
+
 def check_accuracy(loader, model, device="cuda"):
     num_correct = 0
     num_pixels = 0
@@ -104,8 +128,23 @@ def check_accuracy(loader, model, device="cuda"):
     print(f"Dice score: {dice_score/len(loader)}")
     
     model.train()
-    
-    
+
+
+def get_prediction(loader, model, device="cuda"):
+    num_pixels = 0
+    model.eval()
+
+    with torch.no_grad():
+        for x in loader:
+            x = x.float().unsqueeze(1).to(device)
+            preds = torch.sigmoid(model(x))
+            preds = (preds > 0.5).float()
+
+            num_pixels += torch.numel(preds)
+
+
+    model.train()
+
     
 def save_predictions(
     loader, model, folder="/Users/kurtlab/Documents/GitHub/Brain_Segmentation/saved_BrainSegImages", device="cuda"
@@ -119,9 +158,9 @@ def save_predictions(
         torchvision.utils.save_image(preds[0, 0, 64, :, :], f"{folder}/pred_{idx}.png")
         torchvision.utils.save_image(y.float().unsqueeze(1)[0, 0, 64, :, :], f"{folder}/train_{idx}.png")
         # Convert numpy array to NIFTI
-        preds = x.float().squeeze(1).to(device=device)
-        image_data = sitk.GetImageFromArray(preds, sitk.sitkFloat32)
-        sitk.WriteImage(image_data, f"{folder}/prediction_{idx}.nii.gz")
+        # preds = x.float().squeeze(1).to(device=device)
+        # image_data = sitk.GetImageFromArray(preds, sitk.sitkFloat32)
+        # sitk.WriteImage(image_data, f"{folder}/prediction_{idx}.nii.gz")
 
 
     model.train()

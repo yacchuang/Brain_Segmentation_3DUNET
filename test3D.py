@@ -19,6 +19,8 @@ from utils import (
     load_checkpoint,
     save_checkpoint,
     get_loaders,
+    get_testset,
+    get_prediction,
     check_accuracy,
     save_predictions,
 )
@@ -45,7 +47,7 @@ def main():
     loss_fn = nn.BCEWithLogitsLoss()  # For multiclass seg: cross entropy loss
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
-    test_loader = get_loaders(
+    test_loader = get_testset(
         TEST_IMG_DIR,
         BATCH_SIZE,
         aug,
@@ -54,9 +56,8 @@ def main():
     )
 
     load_checkpoint(torch.load("PFcheckpoint_EP10.pth.tar"), model)
-    check_accuracy(test_loader, model, device=DEVICE)
+    get_prediction(test_loader, model, device=DEVICE)
 
-    scaler = torch.cuda.amp.GradScaler()
 
     # check accuracy and plot prediction images
     check_accuracy(test_loader, model, device=DEVICE)
