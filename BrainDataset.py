@@ -67,7 +67,7 @@ class BrainDataset(Dataset):
 
         # image = np.array(Image.open(img_path).convert("RGB"))
         # mask = np.array(Image.open(mask_path).convert("L"), dtype=np.float32)
-        mask[mask == 255.0] = 1.0
+        mask[mask == 128.0] = 1.0
 
 
 
@@ -78,6 +78,7 @@ class BrainDataset(Dataset):
             data = {'image': image, 'mask': mask}
             aug_data = aug(**data)
             image, mask = aug_data['image'], aug_data['mask']
+            # mask[mask == 128.0] = 1.0
 
 
         return image, mask

@@ -59,8 +59,8 @@ def main():
     get_prediction(test_loader, model, device=DEVICE)
 
 
-    # check accuracy and plot prediction images
-    check_accuracy(test_loader, model, device=DEVICE)
+    # # check accuracy and plot prediction images
+    # check_accuracy(test_loader, model, device=DEVICE)
 
     # print predictions to a folder
     save_predictions(

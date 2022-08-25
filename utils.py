@@ -92,7 +92,7 @@ def get_testset(
         batch_size=batch_size,
         num_workers=num_workers,
         pin_memory=pin_memory,
-        shuffle=True,
+        shuffle=False,
     )
 
     return test_loader
@@ -158,9 +158,9 @@ def save_predictions(
         torchvision.utils.save_image(preds[0, 0, 64, :, :], f"{folder}/pred_{idx}.png")
         torchvision.utils.save_image(y.float().unsqueeze(1)[0, 0, 64, :, :], f"{folder}/train_{idx}.png")
         # Convert numpy array to NIFTI
-        # preds = x.float().squeeze(1).to(device=device)
-        # image_data = sitk.GetImageFromArray(preds, sitk.sitkFloat32)
-        # sitk.WriteImage(image_data, f"{folder}/prediction_{idx}.nii.gz")
+        # preds = x.float().squeeze(1).to(device=device)    # resample
+        image_data = sitk.GetImageFromArray(preds)
+        sitk.WriteImage(image_data, f"{folder}/pred3D_{idx}.nii.gz")
 
 
     model.train()
